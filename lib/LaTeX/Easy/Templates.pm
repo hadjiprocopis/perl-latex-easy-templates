@@ -1514,21 +1514,30 @@ when templates are including other templates in different directories.
 =item * B<function>, B<module> : specify your own perl functions and modules you want to use
 from within a template. That's very handy in overcoming the limitations of the template syntax.
 See L<Text::Xslate::Syntax::Kolon#Functions-and-filters>.
-For example, if you want to use Perl's C<ref()> inside an L<Text::Xslate> template,
+For example, if you want to use Perl's C<ref()> inside a
+L<Text::Xslate> template, or use your own function called C<myfunc()>,
 e.g. in a scenario similar to this:
 
+    # in the template you want to use Perl's builtin ref()
+    # and also user-defined myfunc():
     : for $authors -> $author {
-    :   if( ref($author) == "HASH" ){ ... }
-    :   elsif( ref($author) == "ARRAY" ){ ... }
+    :   if( ref($author) == 'HASH' ){ ... }
+    :   elsif( ref($author) == 'ARRAY' ){ ... }
+        <: myfunc($author) :>
     : }
 
-then (as it is stated also in the L<SYNOPSIS>):
+then (as it is stated also in the L<SYNOPSIS>), pass
+all these function references into the constructor of
+L<LaTeX::Easy::Templates> under key C<function>,like this:
 
     my $latte = LaTeX::Easy::Templates->new({
       ...
-      function' => {
+      'function' => {
         # list here all functions you want to use in a template
         'ref' => sub { return ref($_[0]) },
+        'myfunc' => \&myfunc,
+        # something like this defines myfunc():
+        #    sub myfunc { return "funced ".$_[0] }
       },
       ...
     });
