@@ -1,0 +1,70 @@
+Revision history for LaTeX-Easy-Templates
+
+0.01    2024-03-15/23:00
+        First version, released on an unsuspecting world.
+
+0.02    2024-03-15/23:50
+        Completed the distribution with png and jpg files required for testing.
+
+0.03    2024-03-21/23:01
+        Fixed LaTeX program paths detection where e.g. xelatex was not tested to actually exist on disk and being an executable with right permissions.
+
+0.04    2024-03-27/10:00
+        Moved test file "t/400-format.t" into xt/ to be run only by 'author tests' because it was failing in many tester machines which lack LaTeX font and style files. In order for this test to succeed, all these missing LaTeX fonts and style files must be installed and that's not an option. Author tests can be run with "make authortest".
+        Added two more unit tests "t/350-inmemory-template-usage-calling-other-templates.t" and "t/360-ondisk-template-usage-calling-other-templates.t".
+	Enhanced documentation.
+
+0.05    2024-04-02/23:00
+        Enhanced the ability to pass parameters to the Text::Xslate template engine and created a test file
+        to test setting the search paths for included templates.
+        Method 'templater_parameters()' has been removed. Now, parameters to Text::Xslate template engine
+        can only be passed during construction of LaTeX::Easy::Templates.
+        Test files under "xt/" are now included in the distribution, they were omitted in previous releases.
+        Test files above 300 have been restructured and renamed.
+        Enhanced documentation.
+
+0.06    2024-08-26/23:00
+        Added more verbose output when latex driver fails.
+        Removed some expletives.
+
+1.00    2024-10-09/23:00
+        Replaced Storable::dclone() with Clone::clone() because
+        the former bombs when encountering CODErefs while the
+        latter just does a shallow copy as it is needed in this case.
+        This was affecting passing function CODEref to Text::Xslate's
+        constructor but it was not covered by tests so far.
+        I have now hopefully fixed it so that passing functions (and modules)
+        to Text::Xslate works. I have added 3 test files for testing this:
+          220-Xslate-supports-function.t
+          225-Xslate-supports-module-1.t
+          226-Xslate-supports-module-2.t
+        Documentation enhancements with examples on how to print labels
+        and how to print a nested perl data structure :)
+
+1.01    2024-10-10/23:00
+        Documentation fixes.
+
+1.02    2024-10-12/23:00
+        In unit tests, I have migrated from File::Temp to
+        Test::TempDir::Tiny because
+        the former uses global/"our" variables to set
+        important behaviour like keeping tempfiles on exit for inspection.
+        This affects Capture::Tiny which also uses File::Temp
+        and keeps its temp files if I set the global variable
+        in my test file!
+        Similarly, it can affect any package imported
+        directly or indirectly which uses File::Temp!!!!
+        The result is leaking temp files indiscriminately and
+        cluelessly. Even File::Temp's OO API uses these damn
+        global variables and it is not safe to use either.
+        Great, now I have to import the latter for unit testing
+        and the former for main package code./rant off, sorry.
+
+1.03    2025-03-24/15:00
+        Fixed git repository in Makefile.PL
+        Pod enhancements regarding defining functions for use in a template.
+
+1.04    2026-02-02/19:19
+	Added new functionality, tag <<%% eatnewline+ %%>> removes all newlines after it.
+        Pod enhancements.
+        The occasional expletive has been removed.
